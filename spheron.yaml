@@ -1,0 +1,44 @@
+version: "1.0"
+
+services:
+  sentient-agi:
+    image: buidlwithme/sentient:latest
+    pull_policy: Always
+    expose:
+      - port: 8000
+        as: 8000
+        to:
+          - global: true
+profiles:
+  name: sentient-agi
+  duration: 2h
+  mode: provider
+  tier:
+    - secured
+  compute:
+    sentient-agi:
+      resources:
+        cpu:
+          units: 6
+        memory:
+          size: 16Gi
+        storage:
+          - size: 100Gi
+        gpu:
+          units: 1
+          attributes:
+            vendor:
+              nvidia:
+                - model: rtx6000-ada
+  placement:
+    westcoast:
+      pricing:
+        sentient-agi:
+          token: CST
+          amount: 2
+
+deployment:
+  sentient-agi:
+    westcoast:
+      profile: sentient-agi
+      count: 1
